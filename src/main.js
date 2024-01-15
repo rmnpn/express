@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const PORT = 3000;
-const {read, write} = require('./fs.service')
+const {read, write} = require('./fs.service.js')
 app.use(express.json());
 app.use(express.urlencoded({extended: true}))
 app.listen(PORT, () => {
@@ -62,11 +62,13 @@ app.post('/users', async (req, res) => {
 app.delete('/users/:id', async (req, res) => {
     try {
         const id = req.params.id;
-        if (!Number.isInteger(id)) {
+        console.log(id.isInteger())
+        if (!Number.isInteger(+id)) {
+
             throw new Error('Hueve ID');
         }
         const users = await read();
-        const index = users.findIndex((user) => user.id === id)
+        const index = users.findIndex((user) => user.id === +id)
         if (index === -1) { //*якщо немає співпадінь, тоді в методі findIndex -1
             throw new Error('user sibavsi')
         }
@@ -90,7 +92,7 @@ app.put('/users/:id', async (req, res) => {
         if (index === -1) { //*якщо немає співпадінь, тоді в методі findIndex -1
             throw new Error('user sibavsi')
         }
-        users[index] = req.body;   //const updateUserParams = req.body;
+        users[index] = rq.body;   //const updateUserParams = req.body;
         // users[+id]=updateUserParams;
         const updateUserInfoById =
             res.status(200).send({message: 'user updated successfully'})
