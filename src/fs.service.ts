@@ -1,11 +1,7 @@
 import fs from "fs/promises";
 import * as path from "path";
-export interface IUser {
-  id: number;
-  name: string;
-  email: string;
-  age: number;
-}
+
+import { IUser } from "./types/user.type";
 
 const usersPathToFile = path.join(process.cwd(), "db.json");
 const read = async (): Promise<IUser[]> => {
