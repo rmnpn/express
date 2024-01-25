@@ -1,3 +1,4 @@
+import { ApiError } from "../errors/api.error";
 import { userRepository } from "../repositories/user.repository";
 import { IUser } from "../types/user.type";
 
@@ -8,18 +9,20 @@ class UserService {
   public async getByID(id: number): Promise<IUser> {
     return await userRepository.getByID(id);
   }
-  public async postUser(
-    email: string,
-    name: string,
-    age: number,
-  ): Promise<IUser> {
-    return await userRepository.postUser(email, name, age);
+
+  public async deleteById(id: number): Promise<void> {
+    const user = await userRepository.getByID(id);
+    if (!user) {
+      throw new ApiError("already sibavsi", 422);
+    }
+    await userRepository.deleteById(id);
   }
-  public async deleteById(id: number): Promise<IUser> {
-    return await userRepository.deleteById(id);
-  }
-  public async editById(id: number, user: IUser) {
-    return await userRepository.editById(id, user);
+  public async editById(id: number, body: Partial<IUser>): Promise<IUser> {
+    const user = await userRepository.getByID(id);
+    if (!user) {
+      throw new ApiError("already sibavsi", 422);
+    }
+    return await userRepository.editById(id, body);
   }
 }
 

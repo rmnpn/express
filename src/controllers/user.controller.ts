@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 
 import { userService } from "../services/user.service";
+import { IUser } from "../types/user.type";
 
 class UserController {
   public async getAll(req: Request, res: Response, next: NextFunction) {
@@ -20,16 +21,6 @@ class UserController {
       next(e);
     }
   }
-
-  public async postUser(req: Request, res: Response, next: NextFunction) {
-    try {
-      const { name, email, age } = req.body; //* замість user дестр. для перевікри на валідність
-      const user = await userService.postUser(name, email, age);
-      return res.json({ data: user });
-    } catch (e) {
-      next(e);
-    }
-  }
   public async deleteById(req: Request, res: Response, next: NextFunction) {
     try {
       const id = req.params.id;
@@ -42,7 +33,8 @@ class UserController {
   public async editById(req: Request, res: Response, next: NextFunction) {
     try {
       const id = req.params.id;
-      const piderUser = await userService.editById(+id, req.body);
+      const body = req.body as Partial<IUser>;
+      const piderUser = await userService.editById(+id, body);
       res.status(200).send({ data: piderUser });
     } catch (e) {
       next(e);

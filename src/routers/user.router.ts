@@ -9,12 +9,10 @@ export const userRouter = router;
 router.get("", userController.getAll);
 router.get("/:id", commonMiddleware.isIdValid, userController.getByID);
 
-router.post("", commonMiddleware.isNewUserValid, userController.postUser);
+router.put("/:id", commonMiddleware.editByIdIsValid, userController.editById);
 
 router.delete(
   "/:id",
   commonMiddleware.deleteByIdIsValid,
   userController.deleteById,
 );
-
-router.put("/:id", commonMiddleware.editByIdIsValid, userController.editById);

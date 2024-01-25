@@ -1,54 +1,28 @@
-import { read, write } from "../fs.service";
+import { User } from "../models/user.model";
 import { IUser } from "../types/user.type";
 
 class UserRepository {
   public async getAll(): Promise<IUser[]> {
-    const data = await read();
+    const data = await User.find({});
     return data;
   }
 
   public async getByID(id: number): Promise<IUser> {
-    const users = await read();
-    const index = users.findIndex((user: IUser) => user.id === id);
-    if (index === -1) {
+    const user = await User.findOne({ _id: id });
+    if (!user) {
       //*якщо немає співпадінь, тоді в методі findIndex -1
       throw new Error("user sibavsi");
     }
-    return users[index];
+    return user;
   }
-
-  public async postUser(
-    email: string,
-    name: string,
-    age: number,
-  ): Promise<IUser> {
-    const users = await read();
-    const newUser = { id: users[users.length - 1].id + 1, email, name, age };
-    users.push(newUser);
-    await write(users);
-    return newUser;
+  public async deleteById(id: number): Promise<void> {
+    await User.deleteOne({ _id: id });
   }
-  public async deleteById(id: number): Promise<IUser> {
-    const users = await read();
-    const index = users.findIndex((user) => user.id === +id);
-    if (index === -1) {
-      //*якщо немає співпадінь, тоді в методі findIndex -1
-      throw new Error("user sibavsi");
-    }
-    const [deletedUser] = users.splice(index, 1);
-    await write(users);
-    return deletedUser;
+  public async editById(id: number, body: Partial<IUser>): Promise<IUser> {
+    return await User.findByIdAndUpdate(id, body, { returnDocument: "after" });
   }
-  public async editById(id: number, user: IUser) {
-    const users = await read();
-    const index = users.findIndex((user: IUser) => user.id === +id);
-    if (index === -1) {
-      //*якщо немає співпадінь, тоді в методі findIndex -1
-      throw new Error("user sibavsi");
-    }
-    users[index] = Object.assign(users[index], user); // в приоритеті user
-    await write(users);
-    return users[index];
+  public async create(body: Partial<IUser>): Promise<IUser> {
+    return await User.create(body);
   }
 }
 
