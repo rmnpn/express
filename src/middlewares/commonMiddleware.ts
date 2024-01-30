@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { isObjectIdOrHexString } from "mongoose";
 
 import { ApiError } from "../errors/api.error";
+import { ITokenPayload } from "../services/token.service";
 
 class CommonMiddleware {
   public isIdValid(req: Request, res: Response, next: NextFunction) {
@@ -32,10 +33,10 @@ class CommonMiddleware {
       next(e);
     }
   }
-  public deleteByIdIsValid(req: Request, res: Response, next: NextFunction) {
+  public deleteMeIsValid(req: Request, res: Response, next: NextFunction) {
     try {
-      const id = req.params.id;
-      if (!Number.isInteger(+id)) {
+      const jwtPayload = req.res.locals.jwtPayload as ITokenPayload;
+      if (!jwtPayload.userId) {
         throw new Error("Hueve ID");
       }
       next();
