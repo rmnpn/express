@@ -1,17 +1,30 @@
 import { Types } from "mongoose";
 
 import { IRegister } from "../controllers/auth.controller";
+import { EEMailAction } from "../enums/email-action.enum";
 import { ApiError } from "../errors/api.error";
 import { tokenRepository } from "../repositories/token.repository";
 import { userRepository } from "../repositories/user.repository";
 import { ILogin } from "../types/auth.type";
 import { IUser } from "../types/user.type";
+import { emaiService } from "./email.service";
 import { passwordService } from "./password.service";
 import { ITokenPair, ITokenPayload, tokenService } from "./token.service";
 
 class AuthService {
   public async signUp(dto: IRegister): Promise<IUser> {
+    const userFromDb = await userRepository.getOneByParams({
+      email: dto.email,
+    });
+    if (userFromDb) {
+      throw new ApiError("User pes ibe oves", 400);
+    }
     const hashedPassword = await passwordService.hash(dto.password);
+    await emaiService.sendMail(
+      "romanpincak74@gmail.com",
+      EEMailAction.WELCOME,
+      { name: dto.name },
+    );
     return await userRepository.create({ ...dto, password: hashedPassword }); //повертаємо dto(все що приходить від користувача),але замість звичайного пароля захешований
   }
 
