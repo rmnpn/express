@@ -1,3 +1,3 @@
 export enum EEMailAction {
-    WELCOME
+  WELCOME,
 }

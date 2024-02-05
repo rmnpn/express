@@ -7,7 +7,7 @@ import { tokenRepository } from "../repositories/token.repository";
 import { userRepository } from "../repositories/user.repository";
 import { ILogin } from "../types/auth.type";
 import { IUser } from "../types/user.type";
-import { emaiService } from "./email.service";
+import { emailService } from "./email.service";
 import { passwordService } from "./password.service";
 import { ITokenPair, ITokenPayload, tokenService } from "./token.service";
 
@@ -20,7 +20,7 @@ class AuthService {
       throw new ApiError("User pes ibe oves", 400);
     }
     const hashedPassword = await passwordService.hash(dto.password);
-    await emaiService.sendMail(
+    await emailService.sendMail(
       "romanpincak74@gmail.com",
       EEMailAction.WELCOME,
       { name: dto.name },

@@ -18,5 +18,6 @@ app.listen(PORT, async () => {
 app.use("/auth", authRouter);
 app.use("/users", userRouter);
 app.use("*", (err: Error, req: Request, res: Response, next: NextFunction) => {
+  console.log(next);
   return res.json({ message: err.message });
 });
