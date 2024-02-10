@@ -3,7 +3,7 @@ import { ObjectSchema } from "joi";
 import { isObjectIdOrHexString } from "mongoose";
 
 import { ApiError } from "../errors/api.error";
-import { ITokenPayload } from "../services/token.service";
+import { ITokenPayload } from "../types/token.type";
 
 class CommonMiddleware {
   public isIdValid(req: Request, res: Response, next: NextFunction) {

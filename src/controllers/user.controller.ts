@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 
-import { ITokenPayload } from "../services/token.service";
 import { userService } from "../services/user.service";
+import { ITokenPayload } from "../types/token.type";
 import { IUser } from "../types/user.type";
 
 class UserController {
@@ -15,8 +15,7 @@ class UserController {
   }
   public async getById(req: Request, res: Response, next: NextFunction) {
     try {
-      const id = Number(req.params.id);
-      const user = await userService.getById(id);
+      const user = await userService.getById(req.params.id);
       return res.json({ data: user });
     } catch (e) {
       next(e);

@@ -1,7 +1,7 @@
 import { FilterQuery } from "mongoose";
 
 import { User } from "../models/user.model";
-import { ITokenPayload } from "../services/token.service";
+import { ITokenPayload } from "../types/token.type";
 import { IUser } from "../types/user.type";
 
 class UserRepository {
@@ -10,7 +10,7 @@ class UserRepository {
     return data;
   }
 
-  public async getById(id: number): Promise<IUser> {
+  public async getById(id: string): Promise<IUser> {
     const user = await User.findOne({ _id: id });
     if (!user) {
       //*якщо немає співпадінь, тоді в методі findIndex -1
@@ -42,6 +42,9 @@ class UserRepository {
   }
   public async getOneByParams(params: FilterQuery<IUser>): Promise<IUser> {
     return await User.findOne(params as never);
+  }
+  public async updateById(id: string, body: Partial<IUser>): Promise<IUser> {
+    return await User.findByIdAndUpdate(id, body, { returnDocument: "after" });
   }
 }
 

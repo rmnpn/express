@@ -1,14 +1,14 @@
 import { model, Schema, Types } from "mongoose";
 
-import { IToken } from "../types/token.type";
+import { IActionToken } from "../types/token.type";
 import { User } from "./user.model";
 
-const tokenSchema = new Schema({
-  accessToken: {
+const actionTokenSchema = new Schema({
+  actionToken: {
     type: String,
     required: true,
   },
-  refreshToken: {
+  tokenType: {
     type: String,
     required: true,
   },
@@ -19,4 +19,7 @@ const tokenSchema = new Schema({
   },
 });
 
-export const Token = model<IToken>("tokens", tokenSchema);
+export const ActionToken = model<IActionToken>(
+  "actionToken",
+  actionTokenSchema,
+);
