@@ -1,4 +1,5 @@
 export enum EEMailAction {
   WELCOME,
-  FORGOT_PASSWORD
+  FORGOT_PASSWORD,
+  REMIND,
 }

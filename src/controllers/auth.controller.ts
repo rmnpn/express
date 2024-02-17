@@ -11,6 +11,10 @@ export interface IRegister {
   password: string;
   age: number;
 }
+export interface IChangePassword {
+  oldPassword: string;
+  newPassword: string;
+}
 class AuthController {
   public async signUpAdmin(req: Request, res: Response, next: NextFunction) {
     try {
@@ -71,7 +75,7 @@ class AuthController {
     try {
       const user = req.res.locals as IUser;
       await authService.forgotPassword(user);
-      return res.json("OK");
+      return res.sendStatus(204);
     } catch (e) {
       next(e);
     }
@@ -85,7 +89,17 @@ class AuthController {
       const token = req.params.token;
       const newPassword = req.body.newPassword;
       await authService.setForgotPassword(newPassword, token);
-      return res.json("ok");
+      return res.sendStatus(204);
+    } catch (e) {
+      next(e);
+    }
+  }
+  public async changePassword(req: Request, res: Response, next: NextFunction) {
+    try {
+      const jwtPayload = req.res.locals.jwtPayload as ITokenPayload;
+      const body = req.body as IChangePassword;
+      await authService.changePassword(body, jwtPayload);
+      return res.sendStatus(204);
     } catch (e) {
       next(e);
     }

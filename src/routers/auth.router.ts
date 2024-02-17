@@ -49,3 +49,10 @@ router.put(
   authController.setForgotPassword,
 );
 router.put("/activate/:token", authController.activateUser);
+
+router.post(
+  "/change-password",
+  commonMiddleware.isBodyValid(UserValidator.changePassword),
+  authMiddleware.checkAccessToken(ERole.USER),
+  authController.changePassword,
+);

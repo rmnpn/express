@@ -2,6 +2,7 @@ import express, { NextFunction, Request, Response } from "express";
 import * as mongoose from "mongoose";
 
 import { configs } from "./configs/config";
+import { runAllCronJobs } from "./crons";
 import { ApiError } from "./errors/api.error";
 import { adminRouter } from "./routers/admin.router";
 import { authRouter } from "./routers/auth.router";
@@ -29,3 +30,4 @@ app.use(
     });
   },
 );
+runAllCronJobs();

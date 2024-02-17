@@ -1,6 +1,6 @@
 import { Types } from "mongoose";
 
-import { IRegister } from "../controllers/auth.controller";
+import { IChangePassword, IRegister } from "../controllers/auth.controller";
 import { EEMailAction } from "../enums/email-action.enum";
 import { ERole } from "../enums/role.enum";
 import { EActionTokenType } from "../enums/token-type.enum";
@@ -24,11 +24,9 @@ class AuthService {
       throw new ApiError("User pes ibe oves", 400);
     }
     const hashedPassword = await passwordService.hash(dto.password);
-    await emailService.sendMail(
-      "romanpincak74@gmail.com",
-      EEMailAction.WELCOME,
-      { name: dto.name },
-    );
+    await emailService.sendMail(dto.email, EEMailAction.WELCOME, {
+      name: dto.name,
+    });
     return await userRepository.create({
       ...dto,
       password: hashedPassword,
@@ -70,11 +68,10 @@ class AuthService {
     }); //повертаємо dto(все що приходить від користувача),але замість звичайного пароля захешований
 
     const { actionToken } = await this.createActivateToken(user);
-    await emailService.sendMail(
-      "romanpincak74@gmail.com",
-      EEMailAction.WELCOME,
-      { name: dto.name, actionToken },
-    );
+    await emailService.sendMail(dto.email, EEMailAction.WELCOME, {
+      name: dto.name,
+      actionToken,
+    });
     return user;
   }
 
@@ -179,6 +176,21 @@ class AuthService {
       }),
       actionTokenRepository.deleteActionTokenByParams({ actionToken }),
     ]);
+  }
+  public async changePassword(dto: IChangePassword, jwtPaload: ITokenPayload) {
+    const user = await userRepository.getById(jwtPaload.userId);
+    if (!user) {
+      throw new ApiError("User not found", 404);
+    }
+    const isMatch = await passwordService.compare(
+      dto.oldPassword,
+      user.password,
+    );
+    if (!isMatch) {
+      throw new ApiError("Old password is invalid", 400);
+    }
+    const hashNewPassword = await passwordService.hash(dto.newPassword);
+    await userRepository.updateById(user._id, { password: hashNewPassword });
   }
 }
 export const authService = new AuthService();

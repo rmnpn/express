@@ -9,4 +9,8 @@ export const emailTemplates = {
     templateName: "forgot-password",
     subject: "Restore penis!!!",
   },
+  [EEMailAction.REMIND]: {
+    templateName: "remind-users",
+    subject: "Ty sho, nahui, penis!!!",
+  },
 };
