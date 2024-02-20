@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 
+import { UserPresenter } from "../presenters/user.presenter";
 import { userService } from "../services/user.service";
+import { IQuery } from "../types/pagination.type";
 import { ITokenPayload } from "../types/token.type";
 import { IUser } from "../types/user.type";
 
@@ -13,6 +15,23 @@ class UserController {
       next(e);
     }
   }
+
+  public async getAllPaginated(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    try {
+      const usersPaginated = await userService.getMany(req.query as IQuery);
+      const presentedUsers = usersPaginated.data.map((user) =>
+        UserPresenter.userToResponse(user),
+      );
+      return res.json({ ...usersPaginated, data: presentedUsers });
+    } catch (e) {
+      next(e);
+    }
+  }
+
   public async getById(req: Request, res: Response, next: NextFunction) {
     try {
       const user = await userService.getById(req.params.id);
@@ -21,15 +40,17 @@ class UserController {
       next(e);
     }
   }
+
   public async getMe(req: Request, res: Response, next: NextFunction) {
     try {
       const jwtPayload = req.res.locals.jwtPayload as ITokenPayload;
       const user = await userService.getMe(jwtPayload);
-      return res.json({ data: user });
+      return res.json({ data: UserPresenter.userToResponse(user) });
     } catch (e) {
       next(e);
     }
   }
+
   public async deleteMe(req: Request, res: Response, next: NextFunction) {
     try {
       const jwtPayload = req.res.locals.jwtPayload as ITokenPayload;
@@ -39,6 +60,7 @@ class UserController {
       next(e);
     }
   }
+
   public async editMe(req: Request, res: Response, next: NextFunction) {
     try {
       const id = req.params.id;

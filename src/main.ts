@@ -1,13 +1,14 @@
 import express, { NextFunction, Request, Response } from "express";
 import * as mongoose from "mongoose";
+import * as swaggerUi from "swagger-ui-express";
 
 import { configs } from "./configs/config";
-import { runAllCronJobs } from "./crons";
+// import { runAllCronJobs } from "./crons";
 import { ApiError } from "./errors/api.error";
 import { adminRouter } from "./routers/admin.router";
 import { authRouter } from "./routers/auth.router";
 import { userRouter } from "./routers/user.router";
-
+import * as swaggerDocument from "./untils/swagger.json";
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -21,6 +22,7 @@ app.listen(PORT, async () => {
 app.use("/auth", authRouter);
 app.use("/admin", adminRouter);
 app.use("/users", userRouter);
+app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use(
   "*",
   (err: ApiError, req: Request, res: Response, next: NextFunction) => {
@@ -30,4 +32,4 @@ app.use(
     });
   },
 );
-runAllCronJobs();
+// runAllCronJobs();

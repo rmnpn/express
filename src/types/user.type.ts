@@ -9,4 +9,5 @@ export interface IUser extends Document {
   password: string;
   role: ERole;
   isActivate: boolean;
+  createdAt: Date;
 }

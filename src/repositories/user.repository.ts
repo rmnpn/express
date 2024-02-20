@@ -2,6 +2,7 @@ import { FilterQuery } from "mongoose";
 
 import { Token } from "../models/token.model";
 import { User } from "../models/user.model";
+import { IPaginationResponse, IQuery } from "../types/pagination.type";
 import { ITokenPayload } from "../types/token.type";
 import { IUser } from "../types/user.type";
 
@@ -42,7 +43,12 @@ class UserRepository {
     return await User.create(body);
   }
   public async getOneByParams(params: FilterQuery<IUser>): Promise<IUser> {
-    return await User.findOne(params as never);
+    return await User.findOne(params);
+  }
+  public async getOneByParamsWithPassword(
+    params: FilterQuery<IUser>,
+  ): Promise<IUser> {
+    return await User.findOne(params).select("password");
   }
   public async findWithoutActivityAfter(date: Date): Promise<IUser[]> {
     return await User.aggregate([
@@ -66,6 +72,21 @@ class UserRepository {
   }
   public async updateById(id: string, body: Partial<IUser>): Promise<IUser> {
     return await User.findByIdAndUpdate(id, body, { returnDocument: "after" });
+  }
+  public async getMany(query: IQuery): Promise<IPaginationResponse<IUser>> {
+    const {
+      page = 1,
+      limit = 10,
+      sortedBy = "createdAt",
+      ...searchObject
+    } = query;
+    const skip = +limit * (+page - 1);
+    const users = await User.find(searchObject)
+      .sort(sortedBy)
+      .limit(limit)
+      .skip(skip);
+    const itemsFound = await User.countDocuments(searchObject);
+    return { page: +page, limit: +limit, itemsFound, data: users };
   }
 }
 

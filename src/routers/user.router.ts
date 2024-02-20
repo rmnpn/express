@@ -8,7 +8,7 @@ import { UserValidator } from "../validators/user.validators";
 
 const router = Router();
 export const userRouter = router;
-router.get("", userController.getAll);
+router.get("", userController.getAllPaginated);
 router.get(
   "/me",
   authMiddleware.checkAccessToken(ERole.USER),

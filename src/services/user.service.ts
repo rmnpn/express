@@ -1,5 +1,6 @@
 import { ApiError } from "../errors/api.error";
 import { userRepository } from "../repositories/user.repository";
+import { IQuery } from "../types/pagination.type";
 import { ITokenPayload } from "../types/token.type";
 import { IUser } from "../types/user.type";
 
@@ -37,6 +38,14 @@ class UserService {
       throw new ApiError("Ne tviy acc, pider!", 403);
     }
     return await userRepository.editMe(jwtPayload, body);
+  }
+  public async getMany(query: IQuery) {
+    const queryString = JSON.stringify(query);
+    const queryObject = JSON.parse(
+      queryString.replace(/\b(gte|lte|gt|lt)\b/, (match) => `$${match}`),
+    );
+    const usersPaginated = await userRepository.getMany(queryObject);
+    return usersPaginated;
   }
 }
 

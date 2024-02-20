@@ -2,8 +2,8 @@ import { Router } from "express";
 
 import { adminController } from "../controllers/admin.controller";
 import { ERole } from "../enums/role.enum";
+import { authMiddleware } from "../middlewares/authMiddleware";
 import { userMiddleware } from "../middlewares/user.Middleware";
-import {authMiddleware} from "../middlewares/authMiddleware";
 
 const router = Router();
 export const userRouter = router;

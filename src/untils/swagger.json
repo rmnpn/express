@@ -1,0 +1,40 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "",
+    "title": ""
+  },
+  "paths": {
+    "/users" : {
+      "get": {
+        "tags": ["User"],
+        "description": "get all users",
+        "parameters": [
+          {
+            "name": "petId",
+            "in": "path",
+            "description": "ID of pet to update",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+           "200": {
+             "description": "received all users",
+             "$ref": "#/definitions/User"
+           }
+        }
+      }
+    }
+
+  },
+  "definitions": {
+    "User": {
+      "properties": {
+        "email": "string",
+        "password": "string"
+      }
+    }
+  }
+}

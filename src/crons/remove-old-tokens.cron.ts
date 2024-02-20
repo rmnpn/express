@@ -17,4 +17,4 @@ const removeOldTokens = async function () {
     throw new ApiError(e.message, e.status);
   }
 };
-export const tokensRemover = new CronJob("* 1 * * * *", removeOldTokens);
+export const tokensRemover = new CronJob("1 1 1 1 1 1", removeOldTokens);
