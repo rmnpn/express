@@ -28,9 +28,17 @@ const userSchema = new Schema(
       required: true,
       select: false,
     },
+    phone: {
+      type: String,
+      required: true,
+    },
     isActivate: {
       type: Boolean,
       default: false,
+    },
+    avatar: {
+      type: String,
+      default: null,
     },
   },
   {

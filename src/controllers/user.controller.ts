@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { UploadedFile } from "express-fileupload";
 
 import { UserPresenter } from "../presenters/user.presenter";
 import { userService } from "../services/user.service";
@@ -63,12 +64,32 @@ class UserController {
 
   public async editMe(req: Request, res: Response, next: NextFunction) {
     try {
-      const id = req.params.id;
       const jwtPayload = req.res.locals.jwtPayload as ITokenPayload;
 
       const body = req.body as Partial<IUser>;
-      const piderUser = await userService.editMe(jwtPayload, +id, body);
+      const piderUser = await userService.editMe(jwtPayload, body);
       res.status(200).send({ data: piderUser });
+    } catch (e) {
+      next(e);
+    }
+  }
+  public async uploadAvatar(req: Request, res: Response, next: NextFunction) {
+    try {
+      const jwtPayload = req.res.locals.jwtPayload as ITokenPayload;
+      await userService.uploadAvatar(
+        jwtPayload,
+        req.files.avatar as UploadedFile,
+      );
+      res.json("ok");
+    } catch (e) {
+      next(e);
+    }
+  }
+  public async deleteAvatar(req: Request, res: Response, next: NextFunction) {
+    try {
+      const jwtPayload = req.res.locals.jwtPayload as ITokenPayload;
+      await userService.deleteAvatar(jwtPayload);
+      res.json("ok");
     } catch (e) {
       next(e);
     }

@@ -1,4 +1,5 @@
 import express, { NextFunction, Request, Response } from "express";
+import fileupload from "express-fileupload";
 import * as mongoose from "mongoose";
 import * as swaggerUi from "swagger-ui-express";
 
@@ -12,6 +13,7 @@ import * as swaggerDocument from "./untils/swagger.json";
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(fileupload());
 
 const PORT = configs.PORT;
 app.listen(PORT, async () => {

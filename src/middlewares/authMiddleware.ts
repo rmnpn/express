@@ -16,7 +16,11 @@ class AuthMiddleware {
         }
 
         const accessToken = tokenString.split("Bearer ")[1];
-        const jwtPayload = tokenService.checkAuthToken(accessToken, "access", role);
+        const jwtPayload = tokenService.checkAuthToken(
+          accessToken,
+          "access",
+          role,
+        );
         const entity = await tokenRepository.getOneBy({ accessToken });
         if (!entity) {
           throw new ApiError("Token not valid", 401);

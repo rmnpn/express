@@ -10,4 +10,6 @@ export interface IUser extends Document {
   role: ERole;
   isActivate: boolean;
   createdAt: Date;
+  phone: string;
+  avatar: string;
 }

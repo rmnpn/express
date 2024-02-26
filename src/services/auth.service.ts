@@ -13,6 +13,7 @@ import { ITokenPair, ITokenPayload } from "../types/token.type";
 import { IUser } from "../types/user.type";
 import { emailService } from "./email.service";
 import { passwordService } from "./password.service";
+// import { prepareSmsService } from "./prepare-sms.service";
 import { tokenService } from "./token.service";
 
 class AuthService {
@@ -72,6 +73,7 @@ class AuthService {
       name: dto.name,
       actionToken,
     });
+    // await prepareSmsService.register(dto.phone, { name: dto.name });
     return user;
   }
 

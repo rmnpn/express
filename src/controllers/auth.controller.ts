@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
+import { UserPresenter } from "../presenters/user.presenter";
 import { authService } from "../services/auth.service";
 import { ILogin } from "../types/auth.type";
 import { ITokenPayload } from "../types/token.type";
@@ -10,6 +11,7 @@ export interface IRegister {
   name: string;
   password: string;
   age: number;
+  phone: string;
 }
 export interface IChangePassword {
   oldPassword: string;
@@ -39,7 +41,7 @@ class AuthController {
     try {
       const body = req.body as IRegister;
       const createdUser = await authService.signUp(body);
-      return res.json({ data: createdUser });
+      return res.json({ data: UserPresenter.userToResponse(createdUser) });
     } catch (e) {
       next(e);
     }
