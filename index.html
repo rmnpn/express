@@ -28,6 +28,11 @@ socket.on("room:newUserJoined", (socketId)=> {alert(socketId);})
 joinRoom.onclick = () => {
     socket.emit('room:join', { roomId: 1 })
 }
+
+
+
+
+
 </script>
 </body>
 </html>
